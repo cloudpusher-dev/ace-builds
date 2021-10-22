@@ -36,7 +36,23 @@ var YamlHighlightRules = function() {
                 regex : "-\\s*(?=[{])"
             }, {
                 token : "string", // single line
-                regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+                regex : /"/,
+                push : [{
+                    token : "constant.language",
+                    regex : /{{[^{}"]+}}/
+                }, {
+                    token : "constant",
+                    regex : /\${[^{}"]+}/
+                }, {
+                    token : "string",
+                    regex : /(?:\\\\.)|(?:[^"\\\\])/
+                }, {
+                    token : "string",
+                    regex : /"/,
+                    next : "pop"
+                }, {
+                    defaultToken : "string"
+                }]
             }, {
                 token : "string", // multi line string start
                 regex : /[|>][-+\d]*(?:$|\s+(?:$|#))/,
@@ -64,7 +80,23 @@ var YamlHighlightRules = function() {
                 next : "mlString"
             }, {
                 token : "string", // single quoted string
-                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+                regex : /'/,
+                push : [{
+                    token : "constant.language",
+                    regex : /{{[^{}']+}}/
+                }, {
+                    token : "constant",
+                    regex : /\${[^{}']+}/
+                }, {
+                    token : "string",
+                    regex : /(?:\\\\.)|(?:[^'\\\\])/
+                }, {
+                    token : "string",
+                    regex : /'/,
+                    next : "pop"
+                }, {
+                    defaultToken : "string"
+                }]
             }, {
                 token : "constant.numeric", // float
                 regex : /(\b|[+\-\.])[\d_]+(?:(?:\.[\d_]*)?(?:[eE][+\-]?[\d_]+)?)(?=[^\d-\w]|$)/
